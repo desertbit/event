@@ -23,10 +23,17 @@ type Event struct {
 }
 
 // New creates a new single event.
-func New() *Event {
-	return &Event{
+// Optionally pass a recoverer.
+func New(r ...Recoverer) *Event {
+	e := &Event{
 		funcs: make(map[reflect.Value]bool),
 	}
+
+	if len(r) > 0 {
+		e.Recoverer = r[0]
+	}
+
+	return e
 }
 
 // On subscribes a function as new event listener.

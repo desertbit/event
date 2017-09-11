@@ -228,6 +228,37 @@ func TestEventRecoverer(t *testing.T) {
 	}
 }
 
+func TestEventRecovererNew(t *testing.T) {
+	var err error
+	e := New(func(i interface{}, rerr error) {
+		err = rerr
+	})
+
+	e.On(func() {})
+	e.TriggerWait(5)
+	if err == nil {
+		t.Fatal()
+	}
+
+	err = nil
+	e.On(5)
+	if err == nil {
+		t.Fatal()
+	}
+
+	err = nil
+	e.Once(5)
+	if err == nil {
+		t.Fatal()
+	}
+
+	err = nil
+	e.Off(5)
+	if err == nil {
+		t.Fatal()
+	}
+}
+
 func TestEventConcurrentMutexLock(t *testing.T) {
 	e := New()
 
